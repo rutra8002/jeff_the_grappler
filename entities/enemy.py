@@ -65,7 +65,9 @@ class Enemy(GameObject):
         self.move_towards_player(delta_time, blocks, player)
         self.apply_gravity_and_friction(delta_time)
         self.apply_movement(delta_time)
+        self.shoot(player)
 
+    def shoot(self, player):
         if self.selected_item and isinstance(self.selected_item, Gun):
             self.selected_item.particle_system = self.particle_system
             self.selected_item.shoot(self.x, self.y, self.width, self.height, player.x, player.y)
