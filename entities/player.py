@@ -26,8 +26,7 @@ class Player(GameObject):
                 if item_data['type'] == 'GrapplingGun':
                     self.inventory.add_item(GrapplingGun(item_data['range'], item_data['speed'], item_data['ammo']))
                 elif item_data['type'] == 'Gun':
-                    self.inventory.add_item(
-                        Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
+                    self.inventory.add_item(Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
                 elif item_data['type'] == 'DesertEagle':
                     self.inventory.add_item(DesertEagle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
         else:
@@ -51,7 +50,7 @@ class Player(GameObject):
     def change_direction(self, camera):
         mouse_position = pyray.get_mouse_position()
         world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-        if world_position.x > self.x+ self.width//2:
+        if world_position.x > self.x + self.width // 2:
             self.direction = 1
         else:
             self.direction = -1
@@ -69,9 +68,9 @@ class Player(GameObject):
         self.update_animation(delta_time)
 
     def handle_item_switching(self):
-        if pyray.is_key_pressed(pyray.KeyboardKey.KEY_E):
+        if pyray.is_key_pressed(pyray.KeyboardKey.KEY_E) or self.input_manager.is_right_back_pressed():
             self.inventory.select_next_item()
-        if pyray.is_key_pressed(pyray.KeyboardKey.KEY_Q):
+        if pyray.is_key_pressed(pyray.KeyboardKey.KEY_Q) or self.input_manager.is_left_back_pressed():
             self.inventory.select_previous_item()
 
     def handle_item_usage(self, selected_item, camera, blocks, delta_time):
@@ -81,7 +80,7 @@ class Player(GameObject):
             self.handle_gun(selected_item, camera)
 
     def handle_grappling_gun(self, selected_item, camera, blocks, delta_time):
-        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT) or self.input_manager.is_right_trigger_pressed():
             mouse_position = pyray.get_mouse_position()
             world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
             mouse_x, mouse_y = world_position.x, world_position.y
@@ -93,7 +92,7 @@ class Player(GameObject):
                 selected_item.reset()
 
     def handle_gun(self, selected_item, camera):
-        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT) or self.input_manager.is_right_trigger_pressed():
             mouse_position = pyray.get_mouse_position()
             world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
             target_x, target_y = world_position.x, world_position.y
@@ -167,7 +166,7 @@ class Player(GameObject):
                     self.vx += horizontal_input / 2 * self.speed * delta_time
             if horizontal_input < 0:
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                    self.vx += horizontal_input / 2 * -self.speed * delta_time
+                    self.vx += horizontal_input / 2 * self.speed * delta_time
 
             self.vx -= 0.01 * self.vx * delta_time
         else:
@@ -184,7 +183,7 @@ class Player(GameObject):
                         self.vx += 10 * horizontal_input * self.speed * delta_time
                 if horizontal_input < 0:
                     if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                        self.vx -= 10 * horizontal_input * -self.speed * delta_time
+                        self.vx += 10 * horizontal_input * self.speed * delta_time
             self.vy = 0
 
     def apply_movement(self, delta_time):

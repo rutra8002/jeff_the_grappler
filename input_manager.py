@@ -5,6 +5,14 @@ class InputManager:
         self.controller_connected = pyray.is_gamepad_available(0)
         self.dead_zone = dead_zone
         self.mouse_sensitivity = mouse_sensitivity
+        self.left_trigger_pressed = False
+        self.right_trigger_pressed = False
+        self.left_trigger_state = False
+        self.right_trigger_state = False
+        self.left_back_pressed = False
+        self.right_back_pressed = False
+        self.left_back_state = False
+        self.right_back_state = False
 
     def apply_dead_zone(self, value):
         if abs(value) < self.dead_zone:
@@ -48,3 +56,39 @@ class InputManager:
                 new_mouse_x = mouse_position.x + right_stick_x * self.mouse_sensitivity
                 new_mouse_y = mouse_position.y + right_stick_y * self.mouse_sensitivity
                 pyray.set_mouse_position(int(new_mouse_x), int(new_mouse_y))
+
+    def is_left_trigger_pressed(self):
+        current_state = pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_LEFT_TRIGGER_2)
+        if current_state and not self.left_trigger_state:
+            self.left_trigger_state = True
+            return True
+        elif not current_state:
+            self.left_trigger_state = False
+        return False
+
+    def is_right_trigger_pressed(self):
+        current_state = pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_RIGHT_TRIGGER_2)
+        if current_state and not self.right_trigger_state:
+            self.right_trigger_state = True
+            return True
+        elif not current_state:
+            self.right_trigger_state = False
+        return False
+
+    def is_left_back_pressed(self):
+        current_state = pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_LEFT_TRIGGER_1)
+        if current_state and not self.left_back_state:
+            self.left_back_state = True
+            return True
+        elif not current_state:
+            self.left_back_state = False
+        return False
+
+    def is_right_back_pressed(self):
+        current_state = pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_RIGHT_TRIGGER_1)
+        if current_state and not self.right_back_state:
+            self.right_back_state = True
+            return True
+        elif not current_state:
+            self.right_back_state = False
+        return False
