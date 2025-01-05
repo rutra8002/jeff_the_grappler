@@ -16,7 +16,7 @@ from UI.player_info import PlayerInfo
 import images
 import sounds
 import shaders
-
+from music_manager import MusicManager
 
 class Game:
     def __init__(self, width=1366, height=768, fps=60):
@@ -35,6 +35,8 @@ class Game:
         self.intro_zooming = True
         self.player_info = None
         self.show_settings_from_pause = False
+        self.music_manager = MusicManager()
+        self.level_music_loaded = False
 
     def show_loading_screen(self, message):
         pyray.begin_drawing()
@@ -57,10 +59,12 @@ class Game:
         self.show_loading_screen("Compiling Shaders...")
         shaders.load_shaders()
 
-        pyray.play_music_stream(sounds.soundes["music"])
+        self.music_manager.load_music("music")
+        self.music_manager.play_music()
+
         while not pyray.window_should_close():
             start_time = time.time()
-            pyray.update_music_stream(sounds.soundes["music"])
+            self.music_manager.update_music()
             if pyray.is_key_pressed(pyray.KeyboardKey.KEY_ESCAPE):
                 self.pause_menu.toggle()
             if self.main_menu.show_menu or self.main_menu.show_map_selection or self.main_menu.show_settings:
@@ -95,6 +99,10 @@ class Game:
                     self.death_menu.toggle()
                     self.main_menu.show_menu = True
             else:
+                if not self.level_music_loaded:
+                    self.music_manager.load_music("level_music")
+                    self.music_manager.play_music()
+                    self.level_music_loaded = True
                 if self.player:
                     self.player_info = PlayerInfo(self.player)
                 if not self.blocks and self.main_menu.selected_map:
