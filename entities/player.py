@@ -170,7 +170,7 @@ class Player(GameObject):
 
             self.vx -= 0.01 * self.vx * delta_time
         else:
-            if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL):
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) or self.input_manager.is_slide_pressed():
                 self.sliding = True
                 self.vx -= 0.01 * self.vx * delta_time
             else:

@@ -92,3 +92,6 @@ class InputManager:
         elif not current_state:
             self.right_back_state = False
         return False
+
+    def is_slide_pressed(self):
+        return self.controller_connected and pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_LEFT)
