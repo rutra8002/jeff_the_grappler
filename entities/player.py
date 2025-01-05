@@ -3,6 +3,8 @@ from items.grapplinggun import GrapplingGun
 from items.gun import *
 from inventory import Inventory
 import images
+from input_manager import InputManager
+
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, particle_system, inventory_data=None, mass=50):
@@ -43,6 +45,9 @@ class Player(GameObject):
         self.time_since_last_frame = 0
 
         self.direction = 0
+
+        # Input manager
+        self.input_manager = InputManager()
 
     def change_direction(self, camera):
         mouse_position = pyray.get_mouse_position()
@@ -154,16 +159,17 @@ class Player(GameObject):
             self.vx = 0
 
     def apply_gravity_and_friction(self, delta_time, blocks):
+        horizontal_input = self.input_manager.get_horizontal_input()
         if not self.grounded:
             self.sliding = False
             self.vy += self.gravity * delta_time * self.mass
 
-            if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
+            if horizontal_input > 0:
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                    self.vx += 0.45 * self.speed * delta_time
-            if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
+                    self.vx += horizontal_input/2 * self.speed * delta_time
+            if horizontal_input < 0:
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                    self.vx += 0.45 * -self.speed * delta_time
+                    self.vx += horizontal_input/2 * -self.speed * delta_time
 
             self.vx -= 0.01 * self.vx * delta_time
         else:
@@ -175,12 +181,12 @@ class Player(GameObject):
                 self.vx -= 10 * self.vx * delta_time
 
             if not self.sliding:
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
+                if horizontal_input > 0:
                     if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                        self.vx += 10 * self.speed * delta_time
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
+                        self.vx += 10 * horizontal_input * self.speed * delta_time
+                if horizontal_input < 0:
                     if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                        self.vx += 10 * -self.speed * delta_time
+                        self.vx -= 10 * horizontal_input * -self.speed * delta_time
             self.vy = 0
 
     def apply_movement(self, delta_time):
