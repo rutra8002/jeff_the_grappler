@@ -5,7 +5,6 @@ from inventory import Inventory
 import images
 from input_manager import InputManager
 
-
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, particle_system, inventory_data=None, mass=50):
         super().__init__(height, width, x, y, color)
@@ -58,6 +57,7 @@ class Player(GameObject):
             self.direction = -1
 
     def movement(self, delta_time, blocks, camera):
+        self.input_manager.update_mouse_position()
         self.change_direction(camera)
         self.grounded = False
         self.handle_item_switching()
@@ -67,7 +67,6 @@ class Player(GameObject):
         self.apply_gravity_and_friction(delta_time, blocks)
         self.apply_movement(delta_time)
         self.update_animation(delta_time)
-
 
     def handle_item_switching(self):
         if pyray.is_key_pressed(pyray.KeyboardKey.KEY_E):
@@ -119,7 +118,6 @@ class Player(GameObject):
             if horizontal_collision == "left" or horizontal_collision == "right":
                 self.handle_side_collision(block, horizontal_collision)
 
-
     def take_damage(self, damage):
         self.health -= damage
         if self.health < 0:
@@ -166,10 +164,10 @@ class Player(GameObject):
 
             if horizontal_input > 0:
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                    self.vx += horizontal_input/2 * self.speed * delta_time
+                    self.vx += horizontal_input / 2 * self.speed * delta_time
             if horizontal_input < 0:
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                    self.vx += horizontal_input/2 * -self.speed * delta_time
+                    self.vx += horizontal_input / 2 * -self.speed * delta_time
 
             self.vx -= 0.01 * self.vx * delta_time
         else:
@@ -218,7 +216,7 @@ class Player(GameObject):
                 mouse_position = pyray.get_mouse_position()
                 world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
                 target_x, target_y = world_position.x, world_position.y
-                selected_item.draw(self.x + self.width // 2 + self.direction*20, self.y + ((self.height // 3)*2), self.width // 1.5,
+                selected_item.draw(self.x + self.width // 2 + self.direction * 20, self.y + ((self.height // 3) * 2), self.width // 1.5,
                                    self.height // 1.5, angle,
                                    self.vx, camera, target_x, target_y)
 
