@@ -128,7 +128,7 @@ class Player(GameObject):
     def handle_top_collision(self, block):
         self.grounded = True
         self.can_jump = True
-        if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
+        if self.input_manager.is_jump_pressed() and self.can_jump:
             self.vy = -self.jump
             self.can_jump = False
             self.grounded = False
@@ -139,7 +139,7 @@ class Player(GameObject):
 
     def handle_side_collision(self, block, horizontal_collision):
         self.can_jump = True
-        if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
+        if self.input_manager.is_jump_pressed() and self.can_jump:
             self.vy = -self.jump
             self.can_jump = False
             if abs(self.vx) > self.speed:

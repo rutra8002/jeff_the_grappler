@@ -21,3 +21,9 @@ class InputManager:
             return self.apply_dead_zone(pyray.get_gamepad_axis_movement(0, pyray.GamepadAxis.GAMEPAD_AXIS_LEFT_Y))
         else:
             return int(pyray.is_key_down(pyray.KeyboardKey.KEY_S)) - int(pyray.is_key_down(pyray.KeyboardKey.KEY_W))
+
+    def is_jump_pressed(self):
+        if self.controller_connected:
+            return pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+        else:
+            return pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE)
