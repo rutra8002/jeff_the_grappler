@@ -14,10 +14,10 @@ def load_shader_with_error_check(vs_path, fs_path):
 
 def load_shaders():
     try:
-        shaders["bloom"] = load_shader_with_error_check(b"", b"shaders/bloom.fs")
         shaders["lava"] = load_shader_with_error_check(b"", b"shaders/lava.fs")
         shaders["background"] = load_shader_with_error_check(b"", b"shaders/background.fs")
         shaders["main_menu_background"] = load_shader_with_error_check(b"", b"shaders/main_menu_background.fs")
+        shaders["lighting"] = load_shader_with_error_check(b"", b"shaders/lighting.fs")
     except Exception as e:
         raise e
 

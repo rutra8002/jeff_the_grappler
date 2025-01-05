@@ -160,7 +160,6 @@ class Game:
         self.check_player_health()
         self.enemies = [enemy for enemy in self.enemies if not enemy.take_damage(0)]
 
-
     def render(self):
         # Render the scene to the texture
         pyray.begin_texture_mode(self.render_texture)
@@ -199,10 +198,29 @@ class Game:
 
         pyray.end_texture_mode()
 
-        # Apply bloom shader to the rendered texture
+        # Apply lighting shader to the rendered texture
         pyray.clear_background(pyray.Color(0, 0, 0, 255))
+
+
         if shaders.shaders_enabled:
-            pyray.begin_shader_mode(shaders.shaders["bloom"])
+
+            pyray.begin_shader_mode(shaders.shaders["lighting"])
+
+            player_screen_pos = pyray.get_world_to_screen_2d(
+                pyray.Vector2(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2),
+                self.camera.camera
+            )
+            light_pos_value = pyray.ffi.new("float[2]",
+                                            [player_screen_pos.x / self.width, player_screen_pos.y / self.height])
+            raylib.SetShaderValue(shaders.shaders["lighting"],
+                                  raylib.GetShaderLocation(shaders.shaders["lighting"], b"lightPos"),
+                                  light_pos_value, raylib.SHADER_UNIFORM_VEC2)
+
+            light_radius_value = pyray.ffi.new("float *", 0.5)
+            raylib.SetShaderValue(shaders.shaders["lighting"],
+                                  raylib.GetShaderLocation(shaders.shaders["lighting"], b"lightRadius"),
+                                  light_radius_value, raylib.SHADER_UNIFORM_FLOAT)
+
             pyray.draw_texture_rec(self.render_texture.texture, pyray.Rectangle(0, 0, self.width, -self.height),
                                    pyray.Vector2(0, 0), pyray.WHITE)
             pyray.end_shader_mode()
