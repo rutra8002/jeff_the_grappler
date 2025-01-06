@@ -18,6 +18,7 @@ def load_textures():
         textures["speed"] = load_texture_with_error_check(b"images/speeed.png")
         textures["player"] = load_texture_with_error_check(b"images/player.png")
         textures["deagle"] = load_texture_with_error_check(b"images/deagle.png")
+        textures["rifle"] = load_texture_with_error_check(b"images/rifle.png")
         textures["enemy"] = load_texture_with_error_check(b"images/enemy.png")
         textures["grappling_gun"] = load_texture_with_error_check(b"images/grappling_gun.png")
     except Exception as e:
