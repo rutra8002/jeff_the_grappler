@@ -69,3 +69,9 @@ class DesertEagle(Gun):
             cooldown=cooldown
         )
         self.texture = images.textures["deagle"]
+
+class Rifle(Gun):
+    def __init__(self, damage, range, speed, ammo, particle_system, cooldown=0.1):
+        super().__init__(damage, range, speed, ammo, particle_system, cooldown=cooldown)
+        self.texture = images.textures["deagle"]
+

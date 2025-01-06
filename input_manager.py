@@ -75,6 +75,9 @@ class InputManager:
             self.right_trigger_state = False
         return False
 
+    def is_right_trigger_held(self):
+        return pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_RIGHT_TRIGGER_2)
+
     def is_left_back_pressed(self):
         current_state = pyray.is_gamepad_button_down(0, pyray.GamepadButton.GAMEPAD_BUTTON_LEFT_TRIGGER_1)
         if current_state and not self.left_back_state:

@@ -1237,7 +1237,7 @@
         },
         "inventory": [
             {
-                "type": "DesertEagle",
+                "type": "Rifle",
                 "damage": 100,
                 "range": 1000,
                 "ammo": 20,

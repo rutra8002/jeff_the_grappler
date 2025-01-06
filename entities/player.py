@@ -29,6 +29,8 @@ class Player(GameObject):
                     self.inventory.add_item(Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
                 elif item_data['type'] == 'DesertEagle':
                     self.inventory.add_item(DesertEagle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
+                elif item_data['type'] == 'Rifle':
+                    self.inventory.add_item(Rifle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
         else:
             self.inventory.add_item(Gun(10, 300, 0, 0, particle_system))
         self.health = 100
@@ -92,11 +94,21 @@ class Player(GameObject):
                 selected_item.reset()
 
     def handle_gun(self, selected_item, camera):
-        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT) or self.input_manager.is_right_trigger_pressed():
-            mouse_position = pyray.get_mouse_position()
-            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-            target_x, target_y = world_position.x, world_position.y
-            selected_item.shoot(self.x, self.y, self.width, self.height, target_x, target_y)
+        if isinstance(selected_item, Rifle):
+            if pyray.is_mouse_button_down(
+                    pyray.MouseButton.MOUSE_BUTTON_LEFT) or self.input_manager.is_right_trigger_held():
+                mouse_position = pyray.get_mouse_position()
+                world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+                target_x, target_y = world_position.x, world_position.y
+                selected_item.shoot(self.x, self.y, self.width, self.height, target_x, target_y)
+        else:
+            if pyray.is_mouse_button_pressed(
+                    pyray.MouseButton.MOUSE_BUTTON_LEFT) or self.input_manager.is_right_trigger_pressed():
+                mouse_position = pyray.get_mouse_position()
+                world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+                target_x, target_y = world_position.x, world_position.y
+                selected_item.shoot(self.x, self.y, self.width, self.height, target_x, target_y)
+
 
     def handle_collisions(self, blocks, delta_time):
         self.time_since_last_damage += delta_time
