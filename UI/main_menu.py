@@ -6,6 +6,7 @@ import shaders
 from UI.button import Button
 from particles import ParticleSystem
 import random
+from settings_manager import SettingsManager
 
 class MainMenu:
     def __init__(self, width, height):
@@ -16,9 +17,10 @@ class MainMenu:
         self.show_settings = False
         self.maps = []
         self.selected_map = None
-        self.fullscreen = False
+        self.settings_manager = SettingsManager()
+        self.fullscreen = self.settings_manager.get_setting("fullscreen")
         self.resolutions = [(1366, 768), (1920, 1080), (2560, 1440)]
-        self.current_resolution_index = 0
+        self.current_resolution_index = self.resolutions.index(self.settings_manager.get_setting("resolution"))
         self.start_button = Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game", 20, pyray.WHITE,
                                    pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
         self.settings_button = Button(width / 2 - 100, height / 2 + 10, 200, 50, "Settings", 20, pyray.WHITE,
@@ -148,6 +150,7 @@ class MainMenu:
             shaders_button.draw()
             if shaders_button.is_clicked:
                 shaders.shaders_enabled = not shaders.shaders_enabled
+                self.settings_manager.set_setting("shaders_enabled", shaders.shaders_enabled)
 
             resolution_text = "Resolution"
             pyray.draw_text(resolution_text, 50, 275, 20, pyray.WHITE)
@@ -161,6 +164,7 @@ class MainMenu:
                 self.current_resolution_index = (self.current_resolution_index + 1) % len(self.resolutions)
                 self.width, self.height = self.resolutions[self.current_resolution_index]
                 pyray.set_window_size(self.width, self.height)
+                self.settings_manager.set_setting("resolution", (self.width, self.height))
 
             fullscreen_text = "Fullscreen"
             pyray.draw_text(fullscreen_text, 50, 335, 20, pyray.WHITE)
@@ -173,6 +177,7 @@ class MainMenu:
             if fullscreen_button.is_clicked:
                 self.fullscreen = not self.fullscreen
                 pyray.toggle_fullscreen()
+                self.settings_manager.set_setting("fullscreen", self.fullscreen)
 
             back_button = Button(self.width / 2 - 100, self.height / 2 + 70, 200, 50, "Back", 20, pyray.WHITE,
                                  pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)

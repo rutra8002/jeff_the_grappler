@@ -17,26 +17,37 @@ import images
 import sounds
 import shaders
 from music_manager import MusicManager
+from settings_manager import SettingsManager
 
 class Game:
     def __init__(self, width=1366, height=768, fps=60):
-        self.width = width
-        self.height = height
+        self.settings_manager = SettingsManager()
+        self.settings = self.settings_manager.settings
+
+        self.width = self.settings.get("resolution", (1366, 768))[0]
+        self.height = self.settings.get("resolution", (1366, 768))[1]
+        self.fullscreen = self.settings.get("fullscreen", False)
+        self.shaders_enabled = self.settings.get("shaders_enabled", False)
+        shaders.shaders_enabled = self.shaders_enabled
+
         self.fps = fps
         self.player = None
         self.blocks = []
         self.enemies = []
         self.camera = None
         self.weapon_particle_system = ParticleSystem()
-        self.main_menu = MainMenu(width, height)
-        self.pause_menu = PauseMenu(width, height)
-        self.death_menu = DeathMenu(width, height)
+        self.main_menu = MainMenu(self.width, self.height)
+        self.pause_menu = PauseMenu(self.width, self.height)
+        self.death_menu = DeathMenu(self.width, self.height)
         self.main_menu.load_maps('maps')
         self.intro_zooming = True
         self.player_info = None
         self.show_settings_from_pause = False
         self.music_manager = MusicManager()
         self.level_music_loaded = False
+
+        if self.fullscreen:
+            pyray.toggle_fullscreen()
 
     def show_loading_screen(self, message):
         pyray.begin_drawing()
