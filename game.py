@@ -120,7 +120,7 @@ class Game:
                         inventory_data=player_data.get('inventory', [])
                     )
                     self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2,
-                                         self.player.y + self.player.height / 2, 3, initial_zoom=2.0)
+                                         self.player.y + self.player.height / 2, 5, initial_zoom=2.0)
                     self.intro_zooming = True
                 self.update(delta_time)
                 self.render()
