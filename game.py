@@ -46,9 +46,6 @@ class Game:
         self.music_manager = MusicManager()
         self.level_music_loaded = False
 
-        if self.fullscreen:
-            pyray.toggle_fullscreen()
-
     def show_loading_screen(self, message):
         pyray.begin_drawing()
         pyray.clear_background(pyray.Color(0, 0, 0, 255))
@@ -58,6 +55,10 @@ class Game:
     def run(self):
         raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT)
         raylib.InitWindow(self.width, self.height, b"Jeff the Grappler")
+
+        if self.fullscreen:
+            pyray.toggle_fullscreen()
+
         self.render_texture = pyray.load_render_texture(self.width, self.height)
         if self.fps is not None:
             pyray.set_target_fps(self.fps)
